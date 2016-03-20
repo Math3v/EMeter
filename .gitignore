@@ -1,0 +1,7 @@
+CmakeFiles/*
+dat/*
+CMakeCache.txt
+data.txt
+Makefile
+electrometer
+cmake_install.cmake
