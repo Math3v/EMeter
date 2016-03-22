@@ -17,35 +17,31 @@ int main(int argc, char** argv ) {
     }
 
     Mat currFrame;
-    Mat prevFrame;
-    int frame_no = 0;
-    float sum;
-    Vec3b currPixel, prevPixel;
+    Vec3b currPixel;
+    unsigned long sumR, sumG, sumB;
     while( cap.read(currFrame) ) {
         int rows = currFrame.rows;
         int cols = currFrame.cols;
-        float r, g, b;
-
-        if( prevFrame.empty() == true ) {
-            prevFrame = currFrame.clone();
-            continue;
-        }
+        sumR = sumG = sumB = 0;
 
         for( int i = 0; i < rows; i++ ) {
             for( int j = 0; j < cols; j++ ) {
                 currPixel = currFrame.at<Vec3b>(Point(i, j));
-                prevPixel = prevFrame.at<Vec3b>(Point(i, j));
-                sum += (currPixel[0] - prevPixel[0]);
-                sum += (currPixel[1] - prevPixel[1]);
-                sum += (currPixel[2] - prevPixel[2]);
+                sumB += currPixel[0];
+                sumG += currPixel[1];
+                sumR += currPixel[2];
             }
         }
+        
+        double cmsec = cap.get( CV_CAP_PROP_POS_MSEC );
+        //int minutes = (int) ((int) (cmsec / (1000.0*60.0)) % (int) 60);
+        //int seconds = (int) (cmsec / 1000) % 60;
 
-        cout << "Frame " << frame_no << " sum " << sum << endl;
-        outfile << frame_no << " " << sum << endl;
-        ++frame_no;
-        prevFrame = currFrame.clone();
-        sum = (float) 0;
+        outfile << cmsec;
+        outfile << " " << sumR;
+        outfile << " " << sumG;
+        outfile << " " << sumB;
+        outfile << endl;
     }
 
     outfile.close();
