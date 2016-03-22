@@ -5,3 +5,5 @@ data.txt
 Makefile
 electrometer
 cmake_install.cmake
+plot.png
+plot.svg
