@@ -31,7 +31,7 @@ int main(int argc, char** argv ) {
 
     outfile.open( "data.txt" );
     VideoCapture cap( argv[1] );
-    if( cap.isOpened() == false ) {
+    if( cap.isOpened() == false && outfile.is_open() ) {
         cerr << "Cannot open file" << endl;
         return -1;
     }
@@ -63,16 +63,12 @@ int main(int argc, char** argv ) {
         for( int i = 0; i < frameHeight; i++ ) {
             for( int j = 0; j < frameWidth; j++ ) {
                 currPixel = currFrame.at<Vec3b>(Point(i, j));
-                //sumB += currPixel[0];
-                //sumG += currPixel[1];
                 sumR += currPixel[2];
             }
         }
 
         outfile << frameNo;
         outfile << " " << sumR;
-        //outfile << " " << sumG;
-        //outfile << " " << sumB;
         outfile << endl;
 
         ++frameNo;
@@ -92,6 +88,7 @@ int main(int argc, char** argv ) {
     }
 
     outfile.close();
+    cap.release();
 
     return 0;
 }

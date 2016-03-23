@@ -4,3 +4,6 @@
 echo "set terminal svg
 set output 'plot.svg' 
 plot 'data.txt' using 1:2 lc rgb 'red' pt 21" | gnuplot
+
+# Cleanup
+rm -f data.txt
