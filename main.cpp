@@ -5,15 +5,14 @@
 using namespace std;
 using namespace cv;
 
-#define WIN_TITLE "Electro Meter v0.1"
-#define WIN_W 480
-#define WIN_H 640
+#define WIN_TITLE "ElectroMeter"
+#define VERSION "0.0.1"
 
 void showIndicator(int x, int y, Mat frame) {
     circle(
     /* Frame::Mat */        frame, 
     /* Circle center */     Point(x,y),
-    /* Radius */            40, 
+    /* Radius */            20, 
     /* Scalar(R, G, B) */   Scalar(0, 0, 255), 
     /* Thickness */         -1, 
     /* LineType */          8, 
@@ -23,9 +22,15 @@ void showIndicator(int x, int y, Mat frame) {
 int main(int argc, char** argv ) {
 
     ofstream outfile;
-    outfile.open( "data.txt" );
 
-    VideoCapture cap( "./dat/br_low_res_1.mp4" );
+    if( argc != 2 ) {
+        cerr << "No input file. Usage: " << argv[0] << " VIDEO_CAPTURE_FILE" << endl;
+        cerr << "Matej Minarik (C) ElectroMeter " << VERSION << endl;
+        return 1;
+    }
+
+    outfile.open( "data.txt" );
+    VideoCapture cap( argv[1] );
     if( cap.isOpened() == false ) {
         cerr << "Cannot open file" << endl;
         return -1;
@@ -39,11 +44,11 @@ int main(int argc, char** argv ) {
     cout << " Height: " << frameHeight << endl;
     cout << " FPS: " << videoFPS << endl;
 
-    int indicatorX = (int) (WIN_H * 0.15);
-    int indicatorY = (int) (WIN_W * 0.85);
+    int indicatorX = (int) ((float) frameHeight * 0.7);
+    int indicatorY = (int) ((float) frameWidth * 0.1);
 
     namedWindow(WIN_TITLE);
-    resizeWindow(WIN_TITLE, WIN_H, WIN_W);
+    resizeWindow(WIN_TITLE, frameHeight, frameWidth);
 
     Mat currFrame, cloneFrame;
     Vec3b currPixel;
