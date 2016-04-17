@@ -81,9 +81,9 @@ int main(int argc, char** argv ) {
     double frameHeight = cap.get( CV_CAP_PROP_FRAME_HEIGHT );
     double videoFPS = cap.get( CV_CAP_PROP_FPS );
 
-    cout << " Width: " << frameWidth << endl;
+    cout << " Width:  " << frameWidth << endl;
     cout << " Height: " << frameHeight << endl;
-    cout << " FPS: " << videoFPS << endl;
+    cout << " FPS:    " << videoFPS << endl;
 
     int indicatorY = (int) ((float) frameHeight * 0.1);
     int indicatorX = (int) ((float) frameWidth * 0.8);
@@ -130,9 +130,11 @@ int main(int argc, char** argv ) {
 
         ++frameNo;
         if( lastR != 0 ) {
-            if( (float) sumR / (float) lastR > 1.10 ) {
+            float ratio = (float) sumR / (float) lastR;
+            if( ratio > 1.08 ) {
                 showIndicator(indicatorX, indicatorY, cloneFrame);
-                cout << "Dot " << frameNo << " " << indicatorX << ":" << indicatorY << endl;
+                cout << "Dot " << frameNo << " " << indicatorX << ":" << indicatorY;
+                cout << " ratio " << ratio << endl;
                 if( true == filterShouldChange(frameNo) ) {
                     filterPixel = getRandomFilter();
                 }
