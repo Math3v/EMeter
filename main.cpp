@@ -64,9 +64,11 @@ int main(int argc, char** argv ) {
 
     srand( time(NULL) );
 
-    if( argc != 2 ) {
-        cerr << "No input file. Usage: " << argv[0] << " VIDEO_CAPTURE_FILE" << endl;
+    if( argc < 2 || argc > 3 ) {
+        cerr << "Argc " << argc << endl;
+        cerr << "Usage: " << argv[0] << " VIDEO_CAPTURE_FILE " << "[VIDEO_OUTPUT_FILE.mp4]" << endl;
         cerr << "Matej Minarik (C) ElectroMeter " << VERSION << endl;
+        cerr << "OpenCV " << CV_VERSION << endl;
         return 1;
     }
 
@@ -77,9 +79,20 @@ int main(int argc, char** argv ) {
         return -1;
     }
 
-    double frameWidth =  cap.get( CV_CAP_PROP_FRAME_WIDTH );
+    double frameWidth  = cap.get( CV_CAP_PROP_FRAME_WIDTH );
     double frameHeight = cap.get( CV_CAP_PROP_FRAME_HEIGHT );
-    double videoFPS = cap.get( CV_CAP_PROP_FPS );
+    double videoFPS    = cap.get( CV_CAP_PROP_FPS );
+    double fourcc      = cap.get( CV_CAP_PROP_FOURCC );
+
+    VideoWriter vw;
+    //CV_FOURCC('M','4','S','2')
+    if( argc == 3 ) {
+        bool open = vw.open( argv[2], (int)fourcc, videoFPS, Size((int)frameHeight, (int)frameWidth));
+        if( false == open || false == vw.isOpened() ) {
+            cerr << "Cannot open file " << argv[2] << endl;
+            return -1;
+        }
+    }
 
     cout << " Width:  " << frameWidth << endl;
     cout << " Height: " << frameHeight << endl;
@@ -124,6 +137,11 @@ int main(int argc, char** argv ) {
             }
         }
 
+        cvtColor( cloneFrame, currFrame, CV_BGR2GRAY );
+        vw.write( cloneFrame );
+        //vw << cloneFrame;
+        //vw << currFrame;
+
         outfile << frameNo;
         outfile << " " << sumR;
         outfile << endl;
@@ -151,6 +169,10 @@ int main(int argc, char** argv ) {
 
     outfile.close();
     cap.release();
+
+    if( argc == 3) {
+        vw.release();
+    }
 
     return 0;
 }
