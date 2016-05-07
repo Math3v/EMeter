@@ -82,12 +82,10 @@ int main(int argc, char** argv ) {
     double frameWidth  = cap.get( CV_CAP_PROP_FRAME_WIDTH );
     double frameHeight = cap.get( CV_CAP_PROP_FRAME_HEIGHT );
     double videoFPS    = cap.get( CV_CAP_PROP_FPS );
-    double fourcc      = cap.get( CV_CAP_PROP_FOURCC );
 
     VideoWriter vw;
-    //CV_FOURCC('M','4','S','2')
     if( argc == 3 ) {
-        bool open = vw.open( argv[2], (int)fourcc, videoFPS, Size((int)frameHeight, (int)frameWidth));
+        bool open = vw.open( argv[2], CV_FOURCC('m', 'p', '4', 'v'), videoFPS, Size((int)frameWidth, (int)frameHeight));
         if( false == open || false == vw.isOpened() ) {
             cerr << "Cannot open file " << argv[2] << endl;
             return -1;
@@ -137,10 +135,7 @@ int main(int argc, char** argv ) {
             }
         }
 
-        cvtColor( cloneFrame, currFrame, CV_BGR2GRAY );
         vw.write( cloneFrame );
-        //vw << cloneFrame;
-        //vw << currFrame;
 
         outfile << frameNo;
         outfile << " " << sumR;
